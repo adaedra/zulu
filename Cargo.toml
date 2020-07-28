@@ -1,0 +1,7 @@
+[package]
+name = "zulu"
+version = "0.1.0"
+authors = ["Thibault “Adædra” Hamel <contact@adaedra.eu>"]
+edition = "2018"
+
+[dependencies]
