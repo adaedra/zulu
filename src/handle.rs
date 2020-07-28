@@ -1,7 +1,7 @@
 use super::native;
 
 pub struct Handle {
-    ptr: *mut native::libzfs_handle_t
+    pub(crate) ptr: *mut native::libzfs_handle_t
 }
 
 impl Handle {
