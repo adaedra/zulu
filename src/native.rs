@@ -10,6 +10,11 @@ pub struct zfs_handle_t {
     _unused: [u8; 0]
 }
 
+#[repr(C)]
+pub struct zpool_handle_t {
+    _unused: [u8; 0]
+}
+
 #[allow(non_camel_case_types)]
 pub type zfs_type_t = i32;
 
@@ -32,4 +37,10 @@ extern "C" {
     pub fn zfs_open(_: *mut libzfs_handle_t, _: *const raw::c_char, _: raw::c_int) -> *mut zfs_handle_t;
     pub fn zfs_close(_: *mut zfs_handle_t);
     pub fn zfs_get_name(_: *mut zfs_handle_t) -> *const raw::c_char;
+    pub fn zfs_get_pool_name(_: *mut zfs_handle_t) -> *const raw::c_char;
+    pub fn zfs_get_handle(_: *mut zfs_handle_t) -> *mut libzfs_handle_t;
+
+    pub fn zpool_open(_: *mut libzfs_handle_t, _: *const raw::c_char) -> *mut zpool_handle_t;
+    pub fn zpool_close(_: *mut zpool_handle_t);
+    pub fn zpool_get_name(_: *mut zpool_handle_t) -> *const raw::c_char;
 }

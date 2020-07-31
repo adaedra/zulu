@@ -1,4 +1,5 @@
 use super::native;
+use super::pool::Pool;
 use std::ffi::CStr;
 
 struct Handle {
@@ -25,6 +26,18 @@ impl Dataset {
         let c_name = unsafe { CStr::from_ptr(native::zfs_get_name(self.h.ptr)) };
         c_name.to_str().unwrap().into()
     }
+
+    pub fn pool(&self) -> Result<Pool, ()> {
+        let pool_name = unsafe { native::zfs_get_pool_name(self.h.ptr) };
+        let zfs = unsafe { native::zfs_get_handle(self.h.ptr) };
+        let pool = unsafe { native::zpool_open(zfs, pool_name) };
+
+        if pool.is_null() {
+            Err(())
+        } else {
+            Ok(unsafe { Pool::from_ptr(pool) })
+        }
+    }
 }
 
 #[cfg(test)]
@@ -32,10 +45,11 @@ mod tests {
     use crate::Zfs;
 
     #[test]
-    fn test_dataset() {
+    fn test_pool() {
         let zfs = Zfs::new().unwrap();
         let dataset = zfs.dataset("macpro/home").unwrap();
-        
-        assert_eq!(&dataset.name(), "macpro/home");
+        let pool = dataset.pool().unwrap();
+
+        assert_eq!(&pool.name(), "macpro");
     }
 }
